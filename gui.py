@@ -35,10 +35,10 @@ class Gui:
             self.screen.addstr(i+5, int(self.maxXY[1]/10), menuOptions[i])
             # Add right
             self.screen.addstr(i+5, int((self.maxXY[1]/10)*9)-len(menuOptions[i+1]), menuOptions[i+1])
-
         # Update screen
         self.screen.refresh()
 
+        # Main input loop
         while True:
             sel = self.screen.getkey()[0]
             if (sel == 'q'):
@@ -49,9 +49,8 @@ class Gui:
                 # Flash to alert user their choice was not an option
                 curses.flash()
             else:
-                self.comms.sendMessage(value)            
+                self.comms.sendMessage(value.to_bytes(1, byteorder='big'))            
 
-            self.screen.addch(self.maxXY[0] - 1, 1, sel)
-            self.screen.refresh()
-
+        # Cleanup before exit
+        self.comms.close()
         curses.endwin()
